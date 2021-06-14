@@ -1,0 +1,341 @@
+<style>
+
+    /* Customizable styles */
+    
+    :root {
+        --fretboard-color-1: #ff4c4c;
+        --fretboard-color-2: #ff7b42;
+        --fretboard-color-3: #dbc745;
+        --fretboard-color-4: #57c94f;
+        --fretboard-color-5: #4b88cd;
+        --fretboard-color-6: #a36cdb;
+        --fretboard-color-7: #dd5594;
+        --fretboard-color-disabled: #777;
+    }
+
+    body {
+        --fretboard-page-side-padding: 10px;
+        --fretboard-page-gap-between-containers: 10px;
+
+        --fretboard-container-background: var(--accented-background-color);
+        --fretboard-container-border-radius: 5px;
+        --fretboard-container-width: 65%;
+        --fretboard-container-padding: 10px;
+
+        --fretboard-name-font-family: var(--main-font-family);
+        --fretboard-name-font-size: 22px;
+        --fretboard-name-font-color: var(--main-font-color);
+
+        --fretboard-note-list-font-family: var(--main-font-family);
+        --fretboard-note-list-font-size: 16px;
+        --fretboard-note-list-font-color: white;
+        --fretboard-note-list-padding: 10px;
+        
+        --fretboard-button-divider-width: 30px;
+        
+        --fretboard-diagram-width: 80%;
+        
+        --fretboard-fret-height: 40px;
+        --fretboard-fret-image: url("custom/images/fret.png");
+        --fretboard-fret-background-color: #48321c;
+        --fretboard-fret-open-background-color: #452C19;
+        --fretboard-fret-open-width: 35px;
+        --fretboard-fret-dot-size: 20px;
+        --fretboard-fret-text-size: 20px;
+        --fretboard-fret-border: 3px ridge #BBB;
+    }
+
+</style>
+
+
+<div id="fretboard-page">
+
+    <div id="fretboard-controls">
+    <button id="fretboard-button-mode" class="fretboard-button btn" mode="dots">Dots</button>
+    <button id="fretboard-button-toggle-1" class="fretboard-button btn">1</button>
+    <button id="fretboard-button-toggle-2" class="fretboard-button btn">2</button>
+    <button id="fretboard-button-toggle-3" class="fretboard-button btn">3</button>
+    <button id="fretboard-button-toggle-4" class="fretboard-button btn">4</button>
+    <button id="fretboard-button-toggle-5" class="fretboard-button btn">5</button>
+    <button id="fretboard-button-toggle-6" class="fretboard-button btn">6</button>
+    <button id="fretboard-button-toggle-7" class="fretboard-button btn">7</button>
+    <button id="fretboard-button-toggle-all" class="fretboard-button btn">All</button>
+    <button id="fretboard-button-toggle-none" class="fretboard-button btn">None</button>
+    <button id="fretboard-edit-open-editor" class="fretboard-button btn">Edit</button>
+    <button id="fretboard-edit-save-changes" class="fretboard-button btn">Save</button>
+    </div>
+
+    <!-- Fretboards will only be appended to one of the following divs -->
+    <div id="fretboard-list1"></div>
+    <div id="fretboard-list2"></div>
+    <div id="fretboard-list3"></div>
+    <div id="fretboard-single"></div>
+    <div id="fretboard-wideSingle"></div>
+    <!-- ------------------------------------------------------------- -->
+
+</div>
+   
+<div id="fretboard-edit">
+    
+    <button id="fretboard-edit-increase-fret" class="fretboard-button btn">+ Fret</button>
+    <button id="fretboard-edit-decrease-fret" class="fretboard-button btn">- Fret</button>
+    <button id="fretboard-edit-increase-string" class="fretboard-button btn">+ String</button>
+    <button id="fretboard-edit-decrease-string" class="fretboard-button btn">- String</button>
+    <button id="fretboard-edit-fret-zero" class="fretboard-button btn">Toggle Fret Zero</button>
+
+</div>
+
+
+
+
+<style>    
+
+    /* Entire page */
+
+    #fretboard-page {
+        padding-left: var(--fretboard-page-side-padding);
+        padding-right: var(--fretboard-page-side-padding);
+    }
+
+    /* Top control buttons */
+
+    #fretboard-controls,
+    #fretboard-edit {
+        padding: 15px;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+    }
+    
+    #fretboard-button-mode {
+        margin-right: var(--fretboard-button-divider-width);
+    }
+
+    .fretboard-button {
+
+    }
+
+    /* Basic fretboard container */
+
+    .fretboard {
+        background-color: var(--fretboard-container-background);
+        border-radius: var(--fretboard-container-border-radius);
+        padding: var(--fretboard-container-padding);
+        margin-left: auto;
+        margin-right: auto;
+        width: var(--fretboard-container-width);
+    }
+    
+    /* Layout-specific styles */
+
+    #fretboard-list1 {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: var(--fretboard-page-gap-between-containers);
+        padding-left: var(--fretboard-page-side-padding);
+        padding-right: var(--fretboard-page-side-padding);
+    }
+    #fretboard-list2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--fretboard-page-gap-between-containers);
+        padding-left: var(--fretboard-page-side-padding);
+        padding-right: var(--fretboard-page-side-padding);
+    }
+    #fretboard-list3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--fretboard-page-gap-between-containers);
+        padding-left: var(--fretboard-page-side-padding);
+        padding-right: var(--fretboard-page-side-padding);
+    }
+    #fretboard-list1 .fretboard, 
+    #fretboard-list2 .fretboard, 
+    #fretboard-list3 .fretboard {
+        width: 100% !important;
+    }
+    #fretboard-single {}
+    #fretboard-wideSingle .fretboard {
+        width: 100% !important;
+    }
+    #fretboard-wideSingle .fretboard-diagram,
+    #fretboard-list1 .fretboard-diagram {
+        width: 90% !important;
+    }
+
+    /* Shape name */
+
+    .fretboard-title {
+        font-family: var(--fretboard-name-font-family) !important;
+        color: var(--fretboard-name-font-color);
+        font-size: var(--fretboard-name-font-size);
+        text-align: center;
+    }
+
+    /* Note list */
+
+    .fretboard-degrees {
+        font-family: var(--fretboard-note-list-font-family) !important;
+        color: var(--fretboard-note-list-font-color);
+        font-size: var(--fretboard-note-list-font-size);
+        text-align: center;
+
+    }
+
+    .fretboard-degrees > span {
+        padding-left: var(--fretboard-note-list-padding);
+        padding-right: var(--fretboard-note-list-padding);
+    }
+
+    /* Fretboard diagram (table) */
+
+    .fretboard-diagram {
+        margin-left: auto;
+        margin-right: auto;
+        width: var(--fretboard-diagram-width);
+        margin-top: 10px;
+        margin-bottom: 10px;
+        table-layout: fixed;
+    }
+
+    /* Frets (table cells) */
+
+    .fret {
+        height: var(--fretboard-fret-height);
+        text-align: center;
+        background-image: var(--fretboard-fret-image);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        border-left: var(--fretboard-fret-border);
+        border-right: var(--fretboard-fret-border);
+        background-color: var(--fretboard-fret-background-color);
+        box-sizing: border-box;
+    }
+
+    .fret-dots {
+        font-size: var(--fretboard-fret-dot-size);
+        position: relative;
+        top: 3px;
+    }
+
+    .fret-text {
+        font-size: var(--fretboard-fret-text-size);
+        background-color: #48321c;
+        line-height: 4px;
+    }
+
+    /* Specific frets */
+
+    .open-fret {
+        width: var(--fretboard-fret-open-width) !important;
+        background-color: var(--fretboard-fret-open-background-color);
+        background-image: none;
+    }
+    .first-fret {
+        background-color: #48321c;
+    }
+    .last-fret {
+        background-color: #48321c;
+    }
+    .open-fret .fret-text {
+        background-color: none;
+    }
+    .fret-note {}
+
+    /* Strings (table rows) */
+
+    .fretboard-string {}
+    .string-0 {}
+    .string-1 {}
+    .string-2 {}
+    .string-3 {}
+    .string-4 {}
+    .string-5 {}
+
+    /* Editor */    
+
+    .fretboard-edit-fret {
+        background-color: rgba(0,0,0,0) !important;
+        border: none !important;
+        width: 100%;
+        text-align: center;
+    }
+    
+    #fretboard-edit-open-editor,
+    #fretboard-edit-save-changes {
+        display: none;
+        margin-left: var(--fretboard-button-divider-width);
+    }
+    
+    #fretboard-edit {
+        margin-top: 8px;
+        display: none;
+    }
+    
+    #fretboard-edit-increase-string,
+    #fretboard-edit-fret-zero {
+        margin-left: var(--fretboard-button-divider-width);
+    }
+
+    #fretboard-edit-fret-count { width: 50px; }
+    #fretboard-edit-string-count { width: 50px; }
+
+    /* Colors based on note interval */
+
+    .fret-1, .fret-♯1, .fret-♭1, .fret-♯♯1, .fret-♭♭1,
+    .fretboard-degree-1, .fretboard-degree-♯1, .fretboard-degree-♭1,
+    .fretboard-degree-♯♯1, .fretboard-degree-♭♭1, #fretboard-button-toggle-1 {
+        color: var(--fretboard-current-color-1);
+    }
+    .fret-2, .fret-♯2, .fret-♭2, .fret-♯♯2, .fret-♭♭2,
+    .fretboard-degree-2, .fretboard-degree-♯2, .fretboard-degree-♭2,
+    .fretboard-degree-♯♯2, .fretboard-degree-♭♭2, #fretboard-button-toggle-2 {
+        color: var(--fretboard-current-color-2);
+    }
+    .fret-3, .fret-♯3, .fret-♭3, .fret-♯♯3, .fret-♭♭3,
+    .fretboard-degree-3, .fretboard-degree-♯3, .fretboard-degree-♭3,
+    .fretboard-degree-♯♯3, .fretboard-degree-♭♭3, #fretboard-button-toggle-3 {
+        color: var(--fretboard-current-color-3);
+    }
+    .fret-4, .fret-♯4, .fret-♭4, .fret-♯♯4, .fret-♭♭4,
+    .fretboard-degree-4, .fretboard-degree-♯4, .fretboard-degree-♭4,
+    .fretboard-degree-♯♯4, .fretboard-degree-♭♭4, #fretboard-button-toggle-4 {
+        color: var(--fretboard-current-color-4);
+    }
+    .fret-5, .fret-♯5, .fret-♭5, .fret-♯♯5, .fret-♭♭5,
+    .fretboard-degree-5, .fretboard-degree-♯5, .fretboard-degree-♭5,
+    .fretboard-degree-♯♯5, .fretboard-degree-♭♭5, #fretboard-button-toggle-5 {
+        color: var(--fretboard-current-color-5);
+    }
+    .fret-6, .fret-♯6, .fret-♭6, .fret-♯♯6, .fret-♭♭6,
+    .fretboard-degree-6, .fretboard-degree-♯6, .fretboard-degree-♭6,
+    .fretboard-degree-♯♯6, .fretboard-degree-♭♭6, #fretboard-button-toggle-6 {
+        color: var(--fretboard-current-color-6);
+    }
+    .fret-7, .fret-♯7, .fret-♭7, .fret-♯♯7, .fret-♭♭7,
+    .fretboard-degree-7, .fretboard-degree-♯7, .fretboard-degree-♭7,
+    .fretboard-degree-♯♯7, .fretboard-degree-♭♭7, #fretboard-button-toggle-7 {
+        color: var(--fretboard-current-color-7);
+    }
+
+    /* Used for JS functionality */
+    :root {
+        --fretboard-status-1: 1;
+        --fretboard-status-2: 1;
+        --fretboard-status-3: 1;
+        --fretboard-status-4: 1;
+        --fretboard-status-5: 1;
+        --fretboard-status-6: 1;
+        --fretboard-status-7: 1;
+
+        --fretboard-current-color-1: var(--fretboard-color-1);
+        --fretboard-current-color-2: var(--fretboard-color-2);
+        --fretboard-current-color-3: var(--fretboard-color-3);
+        --fretboard-current-color-4: var(--fretboard-color-4);
+        --fretboard-current-color-5: var(--fretboard-color-5);
+        --fretboard-current-color-6: var(--fretboard-color-6);
+        --fretboard-current-color-7: var(--fretboard-color-7);
+    }
+
+</style>
